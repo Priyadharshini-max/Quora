@@ -1,0 +1,23 @@
+body {
+  font-family: "Roboto Slab", serif;
+}
+span.NavHeading.navbar-brand {
+  color: rgb(185, 43, 39);
+  font-size: 1.9em;
+  font-weight: 700;
+}
+.searchBtn,
+.addBtn {
+  background: rgb(185, 43, 39);
+}
+
+.navInputBox {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin-left: 100px;
+}
+.navInputBox input[type="text"],
+textarea {
+  border-radius: 5px;
+}

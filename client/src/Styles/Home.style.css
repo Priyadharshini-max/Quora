@@ -1,0 +1,9 @@
+.mainDiv {
+  text-align: center;
+}
+.mainQuestion {
+  border: 2px solid gray;
+  width: 400px;
+  margin: 10px auto;
+}
+

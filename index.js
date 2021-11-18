@@ -4,25 +4,24 @@ const cors = require("cors");
 const { config } = require("dotenv");
 config();
 
-const mongo = require("./Shared/mongodb");
-// const questionRoute = require("./Routes/question.route");
+const questionRoute = require("./Routes/question.route");
+const answerRoute = require("./Routes/answer.route");
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-    console.log("Connected to server");
+    console.log(`Connected to ${port} server`);
 });
 
-async function loadApp() {
+function loadApp() {
     try {
-        await mongo.connect();
+        require("./Shared/mongodb");
         app.use(cors());
         app.use(express.json());
-        // app.use("/", questionRoute);
-
+        app.use(questionRoute);
+        app.use(answerRoute);
     } catch (err) {
-        console.log(err);
+        console.error(err);
         process.exit();
     }
 }
 loadApp();
-

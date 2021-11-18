@@ -1,14 +1,12 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 
-const client = new MongoClient(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const mongo = {
-    db: null,
-    async connect() {
-        await client.connect();
-        console.log("Connected to mongoDB");
-        this.db = client.db(process.env.MONGODB_NAME);
+const mongo = mongoose.connect(process.env.MONGODB_URL, (error) => {
+    if (!error) {
+        console.log("DataBase connected");
+    } else {
+        console.log(error);
     }
-}
+});
+
 
 module.exports = mongo;
