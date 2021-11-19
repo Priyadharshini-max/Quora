@@ -1,42 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import "../Styles/Home.style.css";
 import { Card, Button } from 'react-bootstrap'
 import { useNavigate } from "react-router-dom";
+import { mycontext } from "../Components/Contex";
 
 export default function Home() {
-    const [state, setState] = useState({
-        question: [],
-        answer: []
-    });
-
-    let navigate = useNavigate();
-
-    useEffect(async () => {
-        try {
-            console.log("data");
-            const { data } = await axios.get("http://localhost:3001/getquestion");
-            console.log(data);
-            setState({ ...state, question: data.result });
-            console.log("state", state.question);
-        } catch (err) {
-            console.log(err);
-        }
-    }, []);
-
+    const { questionData,searchName} = useContext(mycontext);
+    const navigate = useNavigate();
     const getId = (id) => {
-        console.log("GetId", id);
         navigate(`/answer/${id}`);
     }
-    
+    const filerData = questionData.filter((data) => {
+        return data.question.toLowerCase().includes(searchName.toLowerCase());
+      });
     return (
         <>
             <div className="mainDiv" style={{ marginTop: ' 40px' }}>
                 <h3>Questions</h3>
-                <p>No of questions : {state.question.length}</p>
-                {state.question.map((item, index) => {
+                <p>No of questions : {questionData.length}</p>
+                {filerData.map((item, index) => {
                     return (
-                        <div className="mainQuestion" onClick={() => { getId(item._id) }}>
+                        <div className="mainQuestion" onClick={() => getId(item._id)} >
                             <div className="questionDiv">
                                 <p>{item.question}</p>
                             </div>

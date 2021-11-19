@@ -1,49 +1,60 @@
 import { Navbar, Container, Nav, Form, FormControl, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import "../Styles/Nav.style.css";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { mycontext } from "./Contex"
+import { addQuestion } from '../question.service';
+
 
 export default function NavbarFn() {
     const [show, setShow] = useState(false);
-    const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setQuestionRaise(initailState);
+        setShow(false)
+    };
     const handleShow = () => setShow(true);
-   
-    const [state, setState] = useState({
-        name: "",
-        question: ""
-    })
 
-    const handleChange = ({ target: { value, name } }) => {
-        setState({ ...state, [name]: value });
-    }
-    g
-    const handleSubmit = async (e) => {
+    const {
+        questionRaise,
+        setQuestionRaise,
+        questionData,
+        setQuestionData,
+        initailState,
+        setSearch,
+        searchName
+    } = useContext(mycontext);
+
+    const handleChange = (e) => {
+        setQuestionRaise({
+            ...questionRaise,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        try {
-            setShow(false);
-            const { name, question } = state;
-            if (name && question) {
-                await axios.post("http://localhost:3001/postquestion", {
-                    name,
-                    question
-                })
-                toast.success('Query Raised Successfully');
-
-                setState({ ...state, name: "", question: "" });
-
-            } else {
-                toast.error('Fill all the fields');
-                setState({ ...state, name: "", question: "" });
-            }
-
-        } catch (error) {
-            toast.error(error.response.data.message);
+        setShow(false);
+        const myData = {
+            name: questionRaise.name,
+            question: questionRaise.question
+        };
+        if (myData.name && myData.question) {
+            addQuestion(myData).then((res) => {
+                setQuestionData([...questionData, res.data.result]);
+                setQuestionRaise(initailState);
+            });
+            toast.success("Question raised successfully");
+        } else {
+            toast.error("Must fill all the fields");
         }
-    }
 
+    };
+    const handleSearch = (e) => {
+        setSearch(e.target.value);
+    };
     return (
         <Navbar bg="light" expand="lg">
             <Container>
@@ -64,8 +75,8 @@ export default function NavbarFn() {
                         </Modal.Header>
                         <Modal.Body>
                             <div className="navInputBox">
-                                <input type="text" placeholder="Enter your name" name="name" value={state.name} onChange={handleChange} /><br /><br />
-                                <textarea rows="5" cols="20" placeholder="Raise your question.." name="question" value={state.question} onChange={handleChange} />
+                                <input type="text" placeholder="Enter your name" name="name" value={questionRaise.name} onChange={handleChange} /><br /><br />
+                                <textarea rows="5" cols="20" placeholder="Raise your question.." name="question" value={questionRaise.question} onChange={handleChange} />
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
@@ -80,11 +91,12 @@ export default function NavbarFn() {
                     <Form className="d-flex">
                         <FormControl
                             type="search"
-                            placeholder="Search Quora"
+                            placeholder="Search Question"
                             className="me-2"
                             aria-label="Search"
+                            onChange={handleSearch}
                         />
-                        <Button className="searchBtn">Search</Button>
+
                     </Form>
                 </Navbar.Collapse>
             </Container>

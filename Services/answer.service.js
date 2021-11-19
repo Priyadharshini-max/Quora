@@ -10,12 +10,13 @@ const updateAnswer = async (req, res) => {
             answer
         });
         console.log("MYDATA  --> ", mydata);
+        await mydata.save();
         const updatedData = await Question.findByIdAndUpdate({ _id: req.params.id },
             { $push: { answersRef: mydata } }, { new: true })
             .populate('answersRef', '_id name answer')
         return res.status(200).json({
             status: 200,
-            result: updatedData
+            result: mydata
         })
 
     } catch (error) {
