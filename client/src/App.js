@@ -6,19 +6,21 @@ import Answer from './Pages/Answer.page';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DataProvider from './Components/Contex';
+import PageNotFound from "./Pages/PagenotFound.page"
 
 export default function App() {
   return (
     <DataProvider>
-    <BrowserRouter>
-      <ToastContainer />
-      <NavbarFn /> 
+      <BrowserRouter>
+        <ToastContainer />
+        <NavbarFn />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="home" element={<Home />} />
           <Route path="/answer/:id" element={<Answer />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
     </DataProvider>
 
   )
